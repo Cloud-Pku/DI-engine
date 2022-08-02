@@ -49,13 +49,22 @@ class StocksEnv(TradingEnv):
         # =================================
 
         # you can select features you want
-        selected_feature_name = ['Close', 'Diff', 'Volume']
+        selected_feature_name = ['Close', 'Diff', 'Open', 'High', 'Low', 'Adj Close', 'Volume']
         selected_feature = np.column_stack([all_feature[k] for k in selected_feature_name])
         feature_dim_len = len(selected_feature_name)
 
         # validate index
         if start_idx is None:
-            self.start_idx = np.random.randint(self.window_size, len(self.df) - self._cfg.eps_length)
+            boundary = int(len(self.df) * self.train_data_percentage)
+            assert len(self.df) - self._cfg.eps_length > boundary + self.window_size,\
+                 "parameter train_data_percentage is too large!"
+            assert boundary - self._cfg.eps_length > self.window_size,\
+                 "parameter train_data_percentage is too small!"
+            if self._env_id[-1] == 'e':
+                # self.start_idx = np.random.randint(self.window_size, boundary - self._cfg.eps_length)
+                self.start_idx = np.random.randint(boundary + self.window_size, len(self.df) - self._cfg.eps_length)
+            else:
+                self.start_idx = np.random.randint(self.window_size, boundary - self._cfg.eps_length)
         else:
             self.start_idx = start_idx
 

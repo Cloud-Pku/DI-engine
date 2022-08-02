@@ -39,9 +39,9 @@ class Actions(int, Enum):
 
 
 class Positions(int, Enum):
-    SHORT = -1.
-    FLAT = 0.
-    LONG = 1.
+    SHORT = -1
+    FLAT = 0
+    LONG = 1
 
 
 def transform(position: Positions, action: int) -> Any:
@@ -101,6 +101,7 @@ class TradingEnv(BaseEnv):
             self.save_path = self._cfg.save_path
         #================================
 
+        self.train_data_percentage = cfg.train_data_percentage
         self.window_size = cfg.window_size
         self.prices = None
         self.signal_features = None

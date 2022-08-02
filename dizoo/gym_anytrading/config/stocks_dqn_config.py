@@ -1,8 +1,10 @@
+import sys
+sys.path.append( '/home/PJLAB/chenyun/trade_test/DI-engine')
 from easydict import EasyDict
 from ding.entry import serial_pipeline_for_anytrading
 
 stocks_dqn_config = dict(
-    exp_name='stocks_test_v14',
+    exp_name='stocks_test_v15',
     env=dict(
         # Whether to use shared memory. Only effective if "env_manager_type" is 'subprocess'
         # Env number respectively for collector and evaluator.
@@ -16,13 +18,17 @@ stocks_dqn_config = dict(
         # associated with the feature length.
         window_size=20,
         # the path to save result image.
-        save_path='./fig/'
+        save_path='./fig/',
+        # the frequence to plot profit.png
+        plot_freq = 10,
+        # 0.8 means 80% data used for training, 20% for test.
+        train_data_percentage = 0.8,
     ),
     policy=dict(
         # Whether to use cuda for network.
         cuda=True,
         model=dict(
-            obs_shape=61,
+            obs_shape=141,
             action_shape=5,
             encoder_hidden_size_list=[128],
             head_layer_num=1,
@@ -32,7 +38,7 @@ stocks_dqn_config = dict(
         # Reward's future discount factor, aka. gamma.
         discount_factor=0.99,
         # How many steps in td error.
-        nstep=3,
+        nstep=9,
         # learn_mode config
         learn=dict(
             update_per_collect=10,
@@ -79,4 +85,4 @@ stocks_dqn_create_config = EasyDict(stocks_dqn_create_config)
 create_config = stocks_dqn_create_config
 
 if __name__ == "__main__":
-    serial_pipeline_for_anytrading([main_config, create_config], seed=0, max_env_step=int(1e4))
+    serial_pipeline_for_anytrading([main_config, create_config], seed=0, max_env_step=int(1e7))
